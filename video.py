@@ -32,7 +32,7 @@ def scale_video(ffmpeg_path, input_path, output_path, scaling_factor):
 def process_videos_in_folder(scaling_factor, output_folder):
     username = getpass.getuser()
     ffmpeg_path = f"C:/Users/{username}/AppData/Roaming/AnyAspectRatio/perm/mvdk/ffmpeg/ffmpeg.exe"
-    input_folder = f"C:/Users/{username}/AppData/Roaming/AnyAspectRatio/perm/eow/movie"
+    input_folder = f"C:/Users/{username}/AppData/Roaming/AnyAspectRatio/perm/zla/movie"
     if not os.path.isdir(input_folder):
         print(f"Input folder not found: {input_folder}")
         sys.exit(1)
