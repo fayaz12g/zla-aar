@@ -6,10 +6,10 @@ import getpass
 
 def download_extract_copy(input_folder, mod_name):
     username = getpass.getuser()
-    directory_path = f"C:/Users/{username}/AppData/Roaming/AnyAspectRatio/perm/eow"
+    directory_path = f"C:/Users/{username}/AppData/Roaming/AnyAspectRatio/perm/zla"
 
     zip_urls = [
-        ("https://github.com/fayaz12g/aar-files/raw/main/eow/echoes.zip", "echoes.zip")
+        ("https://github.com/fayaz12g/aar-files/raw/main/zla/awake.zip", "awake.zip")
     ]
 
     # Check if the directory exists, create if it doesn't

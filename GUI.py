@@ -41,12 +41,12 @@ from video import *
 tool_version = "1.1.0"
 
 root = customtkinter.CTk()
-root.title(f"Fayaz's Settings {tool_version} for Echoes of Wisdom")
+root.title(f"Fayaz's Settings {tool_version} for Link's Awakening")
 root.geometry("540x760")
 
 customtkinter.set_appearance_mode("system")
 customtkinter.set_default_color_theme("blue")  
-windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Fayaz's Echoes of Wisdom Utility {tool_version}")
+windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Fayaz's Link's Awakening Utility {tool_version}")
 
 ###############################################
 ###########    GLOBAL SETTINGS      ###########
@@ -552,7 +552,7 @@ notebook.add("Credits")
 
 credits_label = ClickableLabel(master=notebook.tab("Credits"), text=
                     ('Utility created by fayaz\n'
-                     'https://github.com/fayaz12g/eow-aar\n'
+                     'https://github.com/fayaz12g/zla-aar\n'
                      'ko-fi.com/fayaz12\n'
                      '\n\nWith thanks to\n'
                      'fruithapje21\n'
