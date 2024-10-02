@@ -24,17 +24,33 @@ def asm_to_hex(asm_code):
     encoding, count = ks.asm(asm_code)
     return ''.join('{:02x}'.format(x) for x in encoding)
 
-def eow_hex23(num):
-    num = round(num, 15)
-    packed = struct.pack('!f', num)
-    full_hex = ''.join('{:02x}'.format(b) for b in packed)
-    hex_1 = full_hex[:4]
-    hex_2 = full_hex[4:]
-    asm_1 = f"movz w9, #0x{hex_2}"
-    asm_2 = f"movk w9, #0x{hex_1}, lsl #16"
-    hex_value1 = asm_to_hex(asm_1)
-    hex_value2 = asm_to_hex(asm_2)
-    return hex_value1, hex_value2
+def calculate_rounded_ratio(ratio_value):
+    if ratio_value <= 2:
+        rounded_ratio = round(ratio_value * 16) / 16
+    elif ratio_value > 2 and ratio_value <= 4:
+        rounded_ratio = round(ratio_value * 8) / 8
+    else:
+        rounded_ratio = round(ratio_value * 4) / 4
+    return rounded_ratio
+
+def zla_hex23(num):
+    newnum = round(num, 15)  # Round the input number to 15 decimal places
+    packed = struct.pack('!f', newnum)  # Pack the float as 4 bytes (big-endian)
+    full_hex = ''.join('{:02x}'.format(b) for b in packed)  # Convert to hex string
+    
+    # Reverse the hex string in groups of two
+    reversed_hex = ''.join([full_hex[i:i+2] for i in range(0, len(full_hex), 2)][::-1])
+    
+    # Round the number to a valid floating-point immediate for ARM (modify as necessary)
+    rounded_num = calculate_rounded_ratio(num)
+    
+    # Generate the assembly instruction
+    asm_instruction = f"fmov s9, #{rounded_num}"
+    
+    # Convert to hex using the asm_to_hex function
+    hex_value = asm_to_hex(asm_instruction)
+
+    return reversed_hex, hex_value
 
 def float2hex(f):
         return hex(struct.unpack('>I', struct.pack('<f', f))[0]).lstrip('0x').rjust(8,'0').upper()

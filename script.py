@@ -30,7 +30,7 @@ def patch_blarc(aspect_ratio, HUD_pos, unpacked_folder, cutscene_zoomed):
         paths = file_paths.get(modified_name, [])
         if not paths:
             # If no paths are found, create a default path and add it to the list
-            default_path = os.path.join(unpacked_folder, "region_common", "ui", "GameMain", "blyt", f"{filename}.bflyt")
+            default_path = os.path.join(unpacked_folder, "region_common", "ui", "Game", "blyt", f"{filename}.bflyt")
             paths.append(default_path)
         
         for full_path_of_file in paths:
@@ -71,7 +71,7 @@ def patch_blarc(aspect_ratio, HUD_pos, unpacked_folder, cutscene_zoomed):
             
     blyt_folder = os.path.abspath(os.path.join(unpacked_folder))
     
-    do_not_scale_rootpane = ["Fade", "ScreenCapture", "FrontBlindScreen", "ScreenMainMenu", "ScreenSubMenu", "StaffRoll", "SmoothieBg", "BlindScreen"]
+    do_not_scale_rootpane = ["Ld_Fade"]
    
     rootpane_by_y = []
 
@@ -126,114 +126,30 @@ def patch_blarc(aspect_ratio, HUD_pos, unpacked_folder, cutscene_zoomed):
                 patch_blyt(name, 'RootPane', 'scale_y', 1/s1)
                 patch_blyt(name, 'RootPane', 'scale_x', 1)
 
-        patch_blyt('SubMenuHeader', 'N_Header_00', 'scale_x', 1/s1)
-        patch_blyt('SubMenuHeader', 'N_Footer_00', 'scale_x', 1/s1)
-        patch_blyt('MenuHeader', 'P_pict_04', 'scale_x', 1/s1)
-        patch_blyt('MenuHeader', 'N_Header_00', 'scale_x', 1/s1)
-        patch_blyt('MenuHeader', 'N_Footer_00', 'scale_x', 1/s1)
-        patch_blyt('ScreenCapture', 'RootPane', 'scale_x', 1/s1)
-
-        patch_blyt('L_CommonModal', 'P_footer_00', 'scale_x', 1/s1)
-        patch_blyt('L_CommonModal', 'N_Win_00', 'scale_x', 1/s1)
-        patch_blyt('L_CommonModal', 'S_Graphic_00', 'scale_x', 1/s1)
-
-        patch_blyt('SmoothieBgFront', 'W_FootSdw_00', 'scale_x', 1/s1)
-
-        patch_blyt('MapMenu', 'L_SubHeaderLine_00', 'scale_x', 1/s1)
-
-        patch_blyt('ScreenMainMenu', 'RootPane', 'scale_x', 1/s1)
-
+        
+        patch_blyt('Tl_Title', 'P_Movie_00', 'scale_x', 1/s1)   
+        patch_blyt('Tl_Title', 'P_Movie_00', 'scale_y', 1/s1)  
 
         if HUD_pos == 'corner':
             print("Shifitng elements for corner HUD")
-            patch_blyt('Throbber', 'A_Save_00', 'shift_x', adjust_x(-900, s1))           
-            patch_blyt('Counter', 'L_Cost_00', 'shift_x', adjust_x(711, s1))
-            patch_blyt('CountCost', 'P_Base_00', 'shift_x', adjust_x(1002, s1))
-            patch_blyt('CountCost', 'L_Cost_00', 'shift_x', adjust_x(711, s1))
-            patch_blyt('HeartGaugeList', 'N_Life_00', 'shift_x', adjust_x(-903, s1))
-            patch_blyt('SetSlotUseItem', 'L_SetItem_00', 'shift_x', adjust_x(866, s1))
-            patch_blyt('SystemMenu', 'N_List_00', 'shift_x', adjust_x(-652, s1))
-            patch_blyt('SystemMenu', 'L_ControllerKeyConfig_00', 'shift_x', adjust_x(355.79, s1))
-
-            patch_blyt('MapMenu', 'L_Item_00', 'shift_x', adjust_x(693, s1))
-
-            patch_blyt('KeyItem', 'N_Key_00', 'shift_x', adjust_x(915, s1))       
-
-            patch_blyt('BuffTimer', 'L_BuffDescription_00', 'shift_x', adjust_x(-519, s1))  
-
-            patch_blyt('SetSlotPasteActor', 'L_CopySetItem_00', 'shift_x', adjust_x(724, s1))
-
-            patch_blyt('LinkGauge', 'N_InOut_00', 'shift_x', adjust_x(-918, s1)) 
-            patch_blyt('PartnerGauge', 'N_Offset_00', 'shift_x', adjust_x(838, s1)) 
-            patch_blyt('PartnerGauge', 'W_window_02', 'shift_x', adjust_x(938, s1)) 
-
-            patch_blyt('L_PasteActorSelectList', 'P_pict_01', 'shift_x', adjust_x(911, s1)) 
-            patch_blyt('L_PasteActorSelectList', 'P_pict_00', 'shift_x', adjust_x(-911, s1)) 
-
-            patch_blyt('LocationInfoField', 'N_InOut_00', 'shift_x', adjust_x(-960, s1)) 
-
-            patch_blyt('L_MachineSelectList', 'P_pict_01', 'shift_x', adjust_x(911, s1)) 
-            patch_blyt('L_MachineSelectList', 'P_pict_00', 'shift_x', adjust_x(-911, s1)) 
-
-            patch_blyt('WorldGlobePieceSensor', 'N_Sensor_00', 'shift_x', adjust_x(597, s1)) 
-
-            patch_blyt('MiniGameQuitHelp', 'N_Interact_00', 'shift_x', adjust_x(900, s1)) 
-            patch_blyt('MiniGameQuitHelp', 'L_Interact_00', 'shift_x', adjust_x(-1760, s1)) 
-
-            patch_blyt('CollectMenu', 'N_ZeldaLinkItem_00', 'shift_x', adjust_x(-346, s1)) 
-            patch_blyt('CollectMenu', 'L_Item_21', 'shift_x', adjust_x(-716, s1))
-            patch_blyt('CollectMenu', 'N_Proof_00', 'shift_x', adjust_x(332, s1)) 
-            patch_blyt('CollectMenu', 'N_StampCard_00', 'shift_x', adjust_x(122, s1))
-            patch_blyt('CollectMenu', 'N_Bottle_00', 'shift_x', adjust_x(112, s1)) 
-            patch_blyt('CollectMenu', 'N_PartnerLevel_00', 'shift_x', adjust_x(-352, s1))
-            patch_blyt('CollectMenu', 'L_BtnChoice_00', 'shift_x', adjust_x(232, s1))
-
-            patch_blyt('MapFilter', 'N_InOut_00', 'shift_x', adjust_x(-622, s1))
-        
-            patch_blyt('SetSlotLink', 'L_SetItem_00', 'shift_x', adjust_x(638, s1)) 
-            patch_blyt('SetSlotLink', 'L_SetItem_01', 'shift_x', adjust_x(757, s1))
-            patch_blyt('SetSlotLink', 'L_SetItem_02', 'shift_x', adjust_x(876, s1))
-
-            patch_blyt('FooterHelp', 'N_Interact_00', 'shift_x', adjust_x(900, s1))
-
-            patch_blyt('QuestUpdate', 'N_InOut_00', 'shift_x', adjust_x(490, s1))
-
+            patch_blyt('Cm_HUD', 'P_pict_00', 'shift_x', adjust_x(-618, s1))          
+            patch_blyt('Cm_HUD', 'P_pict_01', 'shift_x', adjust_x(617, s1))     
+            patch_blyt('Cm_HUD', 'P_pict_02', 'shift_x', adjust_x(-808, s1))   
+            patch_blyt('Cm_HUD', 'N_Item_01', 'shift_x', adjust_x(4, s1))     
+            patch_blyt('Cm_HUD', 'N_Item_01', 'shift_x', adjust_x(4, s1))      
+            patch_blyt('Cm_HUD', 'N_Life_00', 'shift_x', adjust_x(-602, s1))      
+            patch_blyt('Cm_HUD', 'N_Key_00', 'shift_x', adjust_x(-610, s1))      
+            patch_blyt('Cm_HUD', 'N_SetItem_00', 'shift_x', adjust_x(4, s1))        
+            patch_blyt('Cm_HUD', 'N_Item_00', 'shift_x', adjust_x(4, s1))      
             
-            patch_blyt('DressUp', 'N_PageInOut_00', 'shift_x', adjust_x(100, s1))
-            patch_blyt('DressUp', 'N_null_00', 'shift_x', adjust_x(-5, s1))
+            patch_blyt('Gm_HUDRupee', 'N_Rupee_00', 'shift_x', adjust_x(80, s1))    
 
-            patch_blyt('SmoothieBgFront', 'SmoothieFruitsSide_00', 'shift_x', adjust_x(-789, s1)) 
-            patch_blyt('SmoothieBgFront', 'SmoothieFruitsSide_01', 'shift_x', adjust_x(789, s1))
-            patch_blyt('SmoothieBgFront', 'SmoothieFruits_00', 'shift_x', adjust_x(-629, s1))
-            patch_blyt('SmoothieBgFront', 'SmoothieFruits_01', 'shift_x', adjust_x(629, s1))
-        
-            patch_blyt('SubQuestInformation', 'N_QuestComplete_00', 'shift_x', adjust_x(346, s1))
-            
-            patch_blyt('QuestInformation', 'N_QuestComplete_00', 'shift_x', adjust_x(346, s1))
-            
-            patch_blyt('SmoothieChoose', 'N_Preview_01', 'shift_x', adjust_x(390, s1))
-            patch_blyt('SmoothieChoose', 'N_Title_00', 'shift_x', adjust_x(-450, s1))
-            patch_blyt('SmoothieChoose', 'N_ListPosition_00', 'shift_x', adjust_x(-450, s1))
+            patch_blyt('Tl_Title', 'P_Logo_00', 'shift_x', adjust_x(-234, s1))    
+            patch_blyt('Tl_Title', 'P_Logo_01', 'shift_x', adjust_x(-234, s1))   
+            patch_blyt('Tl_Title', 'P_Logo_02', 'shift_x', adjust_x(-234, s1))   
 
-            patch_blyt('SmoothieMenu', 'N_List_00', 'shift_x', adjust_x(-516, s1))
-            patch_blyt('SmoothieMenu', 'N_Select_00', 'shift_x', adjust_x(-78, s1))
-
-            patch_blyt('Operate', 'N_InOut_00', 'shift_x', adjust_x(-853, s1))
-
-            patch_blyt('MessageWindowGuide', 'N_DecideOut_00', 'shift_x', adjust_x(496, s1))
-
-            patch_blyt('MessageWindow', 'A_Choice_00', 'shift_x', adjust_x(725, s1))
-            patch_blyt('MessageWindowShop', 'A_Choice_00', 'shift_x', adjust_x(725, s1))
-
-            patch_blyt('RecipeMenu', 'N_Title_00', 'shift_x', adjust_x(-450, s1))
-            patch_blyt('RecipeMenu', 'N_ListPosition_00', 'shift_x', adjust_x(-450, s1))
-            patch_blyt('RecipeMenu', 'N_Preview_00', 'shift_x', adjust_x(390, s1))
-
-            patch_blyt('LinkItemMenu', 'A_Rupee_00', 'shift_x', adjust_x(766, s1))
-
-            # Adjust the title in the title scene animation
-            patch_blyt('Title', 'N_InOut_00', 'shift_x', adjust_x(-478, s1))
-
+            patch_blyt('Ld_ThrobberSave', 'A_alignment_00', 'shift_x', adjust_x(501, s1))   
+            patch_blyt('Ld_Throbber', 'A_alignment_00', 'shift_x', adjust_x(501, s1))   
 
         # To mirror an object, do -x scale, and 180 roate y. For example, if we want to mirror something that is 
 

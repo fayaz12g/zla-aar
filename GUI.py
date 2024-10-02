@@ -258,7 +258,7 @@ def select_mario_folder():
     ratio_value = (int(numerator_entry.get()) / int(denominator_entry.get()))
     scaling_factor = (16/9) / (int(numerator_entry.get()) / int(denominator_entry.get()))
     username = getpass.getuser()
-    gameid = "01008cf01baac000"
+    gameid = "01006BB00C6F0000"
     if output_yuzu.get() is True:
         input_folder = f"C:/Users/{username}/AppData/Roaming/yuzu/load/{gameid}"
         process_name = "yuzu.exe"
@@ -290,15 +290,6 @@ def select_mario_folder():
     if centered_HUD.get() == True:
         print("Center HUD")
         HUD_pos = "center"
-
-    ##################
-    ## Cutscene Fix ##
-    ##################
-    
-    if do_video.get():
-        output_folder = os.path.join(romfs_folder, "region_common", "movie")
-        # download_video_files(text_folder)
-        process_videos_in_folder(str(scaling_factor), output_folder)
 
     if do_main.get():
 
@@ -380,10 +371,10 @@ def pack_widgets():
     aspect_ratio_divider.pack(side="left")
     denominator_entry.pack(side="left")
     
-    DOF_checkbox.pack(padx=5, pady=5)
-    lod_checkbox.pack(padx=5, pady=5)
-    cutscene_checkbox.pack(padx=5, pady=5)
-    shadow_checkbox.pack(padx=10, pady=10)
+    # DOF_checkbox.pack(padx=5, pady=5)
+    # lod_checkbox.pack(padx=5, pady=5)
+    # cutscene_checkbox.pack(padx=5, pady=5)
+    # shadow_checkbox.pack(padx=10, pady=10)
     
     content_frame.pack(padx=10, pady=10)
 
