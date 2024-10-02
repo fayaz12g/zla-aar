@@ -38,15 +38,15 @@ from video import *
 #### Create Window ####
 #######################
 
-tool_version = "1.0.0"
+tool_version = "1.1.0"
 
 root = customtkinter.CTk()
-root.title(f"Fayaz's Settings {tool_version} for Link's Awakening")
+root.title(f"Fayaz's Settings {tool_version} for Echoes of Wisdom")
 root.geometry("540x760")
 
 customtkinter.set_appearance_mode("system")
 customtkinter.set_default_color_theme("blue")  
-windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Fayaz's Link's Awakening Utility {tool_version}")
+windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Fayaz's Echoes of Wisdom Utility {tool_version}")
 
 ###############################################
 ###########    GLOBAL SETTINGS      ###########
@@ -56,13 +56,14 @@ windowtitle = customtkinter.CTkLabel(master=root, font=(CTkFont, 20), text="Faya
 screen_width, screen_height = pyautogui.size()
 ar_numerator = StringVar(value=f"{screen_width}")
 ar_denominator = StringVar(value=f"{screen_height}")
-do_disable_fxaa = BooleanVar(value=True)
-do_disable_dynamicres = BooleanVar(value=True)
-do_video = BooleanVar(value=True)
+do_DOF = BooleanVar(value=False)
+do_lod = BooleanVar(value=False)
+do_2k = BooleanVar(value=False)
+do_video = BooleanVar(value=False)
 do_main = BooleanVar(value=True)
-do_disable_bloom = BooleanVar(value=True)
-do_screenshot = BooleanVar(value=True)
-do_expirements = BooleanVar(value=False)
+cutscene_zoomed = BooleanVar(value=False)
+
+
 
 
 # Legacy Visuals
@@ -101,7 +102,6 @@ input_folder = None
 do_custom_ini = False
 zs_file_path = None
 
-image_name = "switch_normal.jpeg"
 controller_layout_label = ""
 normal__xbox_layout = "Normal Layout:  A > B, B > A , X > Y, Y > X"
 PE__xbox_layout = "PE Layout: A > A, B > B, X > X, Y > Y"
@@ -258,7 +258,7 @@ def select_mario_folder():
     ratio_value = (int(numerator_entry.get()) / int(denominator_entry.get()))
     scaling_factor = (16/9) / (int(numerator_entry.get()) / int(denominator_entry.get()))
     username = getpass.getuser()
-    gameid = "01006BB00C6F0000"
+    gameid = "01008cf01baac000"
     if output_yuzu.get() is True:
         input_folder = f"C:/Users/{username}/AppData/Roaming/yuzu/load/{gameid}"
         process_name = "yuzu.exe"
@@ -315,9 +315,9 @@ def select_mario_folder():
 
         download_extract_copy(input_folder, mod_name)
 
-        # # Create the PCHTXT Files
-        # visual_fixes = create_visuals(do_screenshot.get(), do_disable_fxaa.get(), do_disable_dynamicres.get())
-        # create_patch_files(patch_folder, str(ratio_value), str(scaling_factor), visual_fixes, do_disable_bloom.get())
+        # Create the PCHTXT Files
+        visual_fixes = create_visuals(do_DOF.get(), do_lod.get(), do_2k.get())
+        create_patch_files(patch_folder, str(ratio_value), str(scaling_factor), visual_fixes)
 
         ####################
         # BLARC Extraction #
@@ -335,7 +335,7 @@ def select_mario_folder():
         # Perform Pane Strecthing #
         ###########################
 
-        patch_blarc(str(ratio_value), HUD_pos, romfs_folder, do_expirements.get())
+        patch_blarc(str(ratio_value), HUD_pos, romfs_folder, cutscene_zoomed.get())
 
         
         ##########################
@@ -349,8 +349,6 @@ def select_mario_folder():
                 new_blarc_file = os.path.join(parent_folder, os.path.basename(root) + ".arc")
                 pack_folder_to_blarc(root, new_blarc_file)
                 shutil.rmtree(root) 
-                # compress_zstd(new_blarc_file)
-                # os.remove(new_blarc_file)
 
     ##########################
     #          Finish        #
@@ -382,32 +380,11 @@ def pack_widgets():
     aspect_ratio_divider.pack(side="left")
     denominator_entry.pack(side="left")
     
-    fxaa_checkbox.pack(padx=5, pady=5)
-    screenshot_checkbox.pack(padx=5, pady=5)
-    dynamicres_checkbox.pack(padx=10, pady=10)
-    video_checkbox.pack(padx=10, pady=10)
-    bloom_checkbox.pack(padx=10, pady=10)
-    expirement_checkbox.pack(padx=10, pady=10)
+    DOF_checkbox.pack(padx=5, pady=5)
+    lod_checkbox.pack(padx=5, pady=5)
+    cutscene_checkbox.pack(padx=5, pady=5)
+    shadow_checkbox.pack(padx=10, pady=10)
     
-    image_label.pack()
-
-    image_layout_label.pack(padx=5, pady=5)
-    
-    controller_type_label.pack()
-    controller_type_dropdown.pack()
-
-    if controller_type.get() == "Colored Dualsense":
-        controller_color_label.pack()
-        controller_color_dropdown.pack()
-    
-    if controller_type.get() == "Xbox" or controller_type.get() == "Playstation":
-        button_color_label.pack()
-        button_color_dropdown.pack()
-
-    if controller_type.get() == "Xbox" or controller_type.get() == "Playstation" or controller_type.get() == "Steam Deck":
-        button_layout_label.pack()
-        button_layout_dropdown.pack()
-
     content_frame.pack(padx=10, pady=10)
 
     hud_label.pack()
@@ -448,27 +425,10 @@ def forget_packing():
     aspect_ratio_divider.pack_forget()
     denominator_entry.pack_forget()
     
-    fxaa_checkbox.pack_forget()
-    screenshot_checkbox.pack_forget()
-    dynamicres_checkbox.pack_forget()
-    video_checkbox.pack_forget()
-    bloom_checkbox.pack_forget()
-    expirement_checkbox.pack_forget()
-
-    image_label.pack_forget()
-    image_layout_label.pack_forget()
-    
-    controller_type_label.pack_forget()
-    controller_type_dropdown.pack_forget()
-    
-    controller_color_label.pack_forget()
-    controller_color_dropdown.pack_forget()
-    
-    button_color_label.pack_forget()
-    button_color_dropdown.pack_forget()
-
-    button_layout_label.pack_forget()
-    button_layout_dropdown.pack_forget()
+    DOF_checkbox.pack_forget()
+    lod_checkbox.pack_forget()
+    shadow_checkbox.pack_forget()
+    cutscene_checkbox.pack_forget()
 
     content_frame.pack_forget()
 
@@ -529,127 +489,18 @@ denominator_entry.configure(text_color='gray')
 denominator_entry.bind("<FocusIn>", lambda event: handle_focus_in(denominator_entry, f"{screen_height}"))
 denominator_entry.bind("<FocusOut>", lambda event: handle_focus_out(denominator_entry, f"{screen_height}"))
 
-fxaa_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="120 FPS (Expiremental)", variable=do_disable_fxaa)
-screenshot_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Disable Depth of Field", variable=do_screenshot)
-dynamicres_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="2880x1620 Docked", variable=do_disable_dynamicres)
-video_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Cutscenes Fix", variable=do_video)
-bloom_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Ultrawide Camera", variable=do_disable_bloom)
-expirement_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Expiremental Menu", variable=do_expirements)
+DOF_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Disable DOF", variable=do_DOF)
+lod_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Increase LOD", variable=do_lod)
+shadow_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="2X Shadow Resolution", variable=do_2k)
+cutscene_checkbox = customtkinter.CTkCheckBox(master=notebook.tab("Visuals"), text="Zoomed Cutscenes (and Title Screen)", variable=cutscene_zoomed)
+
 
 ##########################
 ####### Controller #######
 ##########################
 
 notebook.add("Controller")
-
-def update_image(*args):
-    selected_controller_type = controller_type.get().lower()
-    selected_controller_color = controller_color.get().lower()
-    selected_button_layout = button_layout.get().lower()
-
-    global image_name
-    if selected_controller_type == "colored dualsense":
-        if selected_controller_color:
-            image_name = f"dual_{selected_controller_color}.jpeg"
-        else:
-            image_name = f"dual_black.jpeg"
-    elif selected_controller_type == "xbox":
-        if selected_button_layout:
-            image_name = f"xbox_{selected_button_layout}.jpeg"
-        else:
-            image_name = f"xbox_normal.jpeg"
-    elif selected_controller_type == "playstation":
-        if selected_button_layout:
-            image_name = f"dual_{selected_button_layout}.jpeg"
-        else:
-            image_name = f"dual_normal.jpeg"
-    elif selected_controller_type == "switch":
-        image_name = "switch_normal.jpeg"
-    elif selected_controller_type == "steam deck":
-        if selected_button_layout == "normal":
-            image_name = "deck_normal.jpeg"
-        else:
-            image_name = "deck_western.jpeg"
-    elif selected_controller_type == "steam":
-        image_name = "steam_pe.jpeg"
-    else:
-        image_name = "switch_normal.jpeg"
-
-    global controller_layout_label
-
-    if selected_button_layout == "elden ring":
-        image_name = image_name.replace("elden ring", "elden")
-        if selected_controller_type == "playstation":
-            controller_layout_label = elden_dual_layout
-        else:
-            controller_layout_label = elden_xbox_layout
-    elif selected_button_layout == "western":
-        if selected_controller_type == "playstation":
-            controller_layout_label = western_dual_layout
-        else:
-            controller_layout_label = western_xbox_layout
-    elif selected_button_layout == "PE":
-        if selected_controller_type == "playstation":
-            controller_layout_label = PE__dual_layout
-        else:
-            controller_layout_label = PE__xbox_layout
-    elif selected_button_layout == "normal":
-        if selected_controller_type == "playstation":
-            controller_layout_label = normal__dual_layout
-        else:
-            controller_layout_label = normal__xbox_layout
-
-    if selected_controller_type != "playstation" and selected_controller_type != "xbox":
-        controller_layout_label = ""
-
-    image_layout_label.configure(text=controller_layout_label)
-    image_layout_label.update()
-
-    image_path = os.path.join(script_directory, "images", image_name)
     
-    # Load and display the image
-    image = Image.open(image_path)
-    photo = customtkinter.CTkImage(image, size=(500,300))
-    image_label.configure(image=photo)
-    image_label.image = photo  # Keep a reference to the photo to prevent garbage collection
-    image_label.update()
-
-def select_controller(*args):
-    def change_menu(list, option_menu, option_var):
-        option_menu.configure(values=list)
-        option_var.set(list[0])
-    
-    controller = controller_type.get()
-
-    if controller == "Xbox" or controller == "Playstation":
-        change_menu(full_button_layouts, button_layout_dropdown, button_layout)
-    elif controller == "Steam Deck":
-        change_menu(deck_button_layouts, button_layout_dropdown, button_layout) 
-
-    if controller == "Colored Dualsense":
-        change_menu(dualsense_colors, controller_color_dropdown, controller_color)
-
-    if controller == "Xbox" or controller == "Playstation":
-        change_menu(colored_button_colors, button_color_dropdown, button_color)
-
-    update_image()
-    repack_widgets()
-
-image_label= customtkinter.CTkLabel(master=notebook.tab("Controller"), text="")
-
-image_layout_label= customtkinter.CTkLabel(master=notebook.tab("Controller"), text=f"{controller_layout_label}", font=("Roboto", 11, "bold"))
-
-controller_type_label= customtkinter.CTkLabel(master=notebook.tab("Controller"), text="Controller Type:")
-controller_type_dropdown = customtkinter.CTkOptionMenu(master=notebook.tab("Controller"), variable=controller_type, values=controller_types, command=select_controller)
-
-controller_color_label= customtkinter.CTkLabel(master=notebook.tab("Controller"), text="Controller Color:")
-controller_color_dropdown = customtkinter.CTkOptionMenu(master=notebook.tab("Controller"), variable=controller_color, values=dualsense_colors, command=update_image)
-
-button_color_label= customtkinter.CTkLabel(master=notebook.tab("Controller"), text="Button Color:")
-button_color_dropdown = customtkinter.CTkOptionMenu(master=notebook.tab("Controller"), variable=button_color, values=colored_button_colors, command=update_image)
-
-button_layout_label= customtkinter.CTkLabel(master=notebook.tab("Controller"), text="Button Layout:")
-button_layout_dropdown = customtkinter.CTkOptionMenu(master=notebook.tab("Controller"), variable=button_layout, values=full_button_layouts, command=update_image)
 
 notebook.delete("Controller") # delete this line to readd controller options
 
@@ -665,8 +516,6 @@ hud_label= customtkinter.CTkLabel(content_frame, text='Hud Location:')
 center_checkbox = customtkinter.CTkRadioButton(master=notebook.tab("HUD"), text="Center", variable=centered_HUD, value=1, command=lambda: [corner_HUD.set(False), repack_widgets])
 corner_checkbox = customtkinter.CTkRadioButton(master=notebook.tab("HUD"), text="Corner", variable=corner_HUD, value=2, command=lambda: [centered_HUD.set(False), repack_widgets])
 corner_checkbox.select()
-
-notebook.delete("HUD") # delete this line to readd HUD options
 
 ########################
 ####### GENERATE #######
@@ -703,7 +552,7 @@ notebook.add("Credits")
 
 credits_label = ClickableLabel(master=notebook.tab("Credits"), text=
                     ('Utility created by fayaz\n'
-                     'https://github.com/fayaz12g/zla-aar\n'
+                     'https://github.com/fayaz12g/eow-aar\n'
                      'ko-fi.com/fayaz12\n'
                      '\n\nWith thanks to\n'
                      'fruithapje21\n'
@@ -716,8 +565,5 @@ credits_label = ClickableLabel(master=notebook.tab("Credits"), text=
                      'for code beautification and being a great best friend :)'))
 
 pack_widgets()
-
-select_controller()
-update_image()
 
 root.mainloop()
